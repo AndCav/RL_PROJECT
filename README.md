@@ -7,15 +7,23 @@ More details in the report.
 ```
 update introduces new features. 
 -It is now available to launch the simulation just with two .launch file:
-1) launch the world and  pioneers' nodes
-$ roslaunch smart_warehouse_2 all.launch
-using the parameter twopioneer(boolean parameter) you can choose to simulate the warehouse with 1 or 2 pioneers( obviously this will influence the box management policy)
-2) launch the camera and manipulator node
-$ roslaunch smart_warehouse_2 manipulator.launch
+  1) launch the world and  pioneers' nodes
+  $ roslaunch smart_warehouse_2 all.launch
+  using the parameter twopioneer(boolean parameter) you can choose to simulate the warehouse with 1 or 2 pioneers( obviously this will influence the box management policy)
+  2) launch the camera and manipulator node
+  $ roslaunch smart_warehouse_2 manipulator.launch
+
 -The camera node now has a better and smarter policy to choose the box to pick (see the report for details).
+
 -The manipulator movements are now smoother and faster.
+
 -The robots adapt to every movement of the object in the world.
+
 -any position change can be done in the .launch file
+
+-The RViz window doesn't open anymore, if the user wants to use it, or at least see it, he only needs to uncomment from row 37 to 39 in  file: /RL_PROJECT/abb_irb6640_gazebo/launch/moveit_planning_execution_gazebo.launch
+
+-to make the "ray beam" appear during the simulation go to pioneer_p3dx_model/p3dx_description/urdf/pioneer3dx.gazebo, row 97 and set "visualize" to true.
 ```
 
 # To install:
@@ -126,8 +134,4 @@ to create a new map, first launch the gazebo world (step 1) then in two separate
 $ roslaunch p3dx_move moving_no_map.launch
 $ roslaunch p3dx_move rviz.launch
 
-
-
-
-to make the "ray beam" disappear during the simulation go to pioneer_p3dx_model/p3dx_description/urdf/pioneer3dx.gazebo, row 97 and set "visualize" to false.
 ```
