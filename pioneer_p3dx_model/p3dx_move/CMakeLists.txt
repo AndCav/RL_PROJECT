@@ -127,11 +127,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-
-add_executable(p3dx_fleet src/Pioneer.cpp)
-target_link_libraries(p3dx_fleet ${catkin_LIBRARIES})
-
-
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/p3dx_move.cpp
@@ -151,11 +146,11 @@ target_link_libraries(p3dx_fleet ${catkin_LIBRARIES})
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
- add_executable(pioneer_p3dx_1 src/gotopose.cpp)
- target_link_libraries(pioneer_p3dx_1 ${catkin_LIBRARIES})
+ add_executable(pioneer_p3dx src/gotopose.cpp)
+ target_link_libraries(pioneer_p3dx ${catkin_LIBRARIES})
  
- add_executable(pioneer_p3dx_2 src/gotopose_2.cpp)
- target_link_libraries(pioneer_p3dx_2 ${catkin_LIBRARIES})
+# add_executable(pioneer_p3dx_2 src/gotopose_2.cpp)
+# target_link_libraries(pioneer_p3dx_2 ${catkin_LIBRARIES})
  
  add_executable(p3dx_manager src/p3dx_manager.cpp)
  target_link_libraries(p3dx_manager ${catkin_LIBRARIES})

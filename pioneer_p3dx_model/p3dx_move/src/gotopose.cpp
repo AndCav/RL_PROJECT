@@ -10,41 +10,66 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseCl
 bool newdata;
 move_base_msgs::MoveBaseGoal _goal;
 move_base_msgs::MoveBaseGoal _base;
-	
-	void callback(geometry_msgs::Pose destination){
-	_goal.target_pose.header.frame_id = "map";
-	ROS_INFO("new message");
+std::string pref;
 
-  	_goal.target_pose.pose.position.x =destination.position.x;
-  	_goal.target_pose.pose.position.y = destination.position.y;
-  	_goal.target_pose.pose.orientation.w = destination.orientation.w;
-	newdata=true;
-	}
+//LOAD COORDINATE COMPONENT
+void load_param( double & p, double def, std::string name ) {
+  ros::NodeHandle n_param;
+  if( !n_param.getParam( name, p))
+    p = def;
+  std::cout << name << ": " << "\t" << p << std::endl;
+}
+	
+void callback(geometry_msgs::Pose destination){
+_goal.target_pose.header.frame_id = "map";
+ROS_INFO("new message");
+
+_goal.target_pose.pose.position.x =destination.position.x;
+_goal.target_pose.pose.position.y = destination.position.y;
+_goal.target_pose.pose.orientation.w = destination.orientation.w;
+newdata=true;
+}
 	
 
 
 int main(int argc, char** argv){
 	ROS_INFO("starting node");
-   	ros::init(argc, argv, "pioneer_p3dx_1");
+
+	if(argc<2){ pref="p3dx_1";}
+	else{ pref=argv[1];}
+   	ros::init(argc, argv, "pioneer_p3dx");
 	ros::NodeHandle _nh;
 	ros::Subscriber _topic_sub;
 	ros::Publisher _topic_pub;
 	
-	MoveBaseClient _ac("p3dx_1/move_base", true);
-	
-	_base.target_pose.pose.position.x = 2.15;
-	_base.target_pose.pose.position.y = -4.0;
-	_base.target_pose.pose.orientation.w = 6.0;
-	_base.target_pose.header.frame_id = "map";
+	std::string buff=pref+"/move_base";
+	MoveBaseClient _ac(buff, true);
 	
 	ROS_INFO("parameters inizialization done");
 	while(!_ac.waitForServer()){
     ROS_INFO("Waiting for the move_base action server to come up");
   }	
-  	_topic_sub = _nh.subscribe("/Pion/p3dx_1/destination", 3,callback);
-	_topic_pub =_nh.advertise<std_msgs::Int8>("/Pion/p3dx_1/PosReached",3);
-	
+  	buff="/Pion/"+pref+"/destination";
+  	_topic_sub = _nh.subscribe(buff, 3,callback);
+  	buff="/Pion/"+pref+"/PosReached";
+	_topic_pub =_nh.advertise<std_msgs::Int8>(buff,3);
 	ROS_INFO("topic started");
+	
+	
+	double buff_coordinate=0.0;
+	
+	buff=pref+"_x";
+	load_param(buff_coordinate, 0.0, buff );
+	_base.target_pose.pose.position.x=buff_coordinate;
+	
+	buff=pref+"_y";
+	load_param(buff_coordinate, 0.0, buff );
+	_base.target_pose.pose.position.y=buff_coordinate;
+	
+	_base.target_pose.pose.orientation.w = 6.0;
+	_base.target_pose.header.frame_id = "map";
+	
+	
 	newdata=false;
 	ROS_INFO("newdata :%d",newdata);
 	ros::Rate r(5);

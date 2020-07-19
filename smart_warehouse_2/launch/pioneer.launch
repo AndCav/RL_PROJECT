@@ -5,10 +5,10 @@
   <arg name="Twopioneer" default="true"/>
   
   <include file="$(find p3dx_move)/launch/moving_map.launch" />
-  <node pkg="p3dx_move" type="pioneer_p3dx_1" name="pioneer_p3dx_1" output="log"/>
+  <node pkg="p3dx_move" type="pioneer_p3dx" name="pioneer_p3dx_1" args="p3dx_1" output="log"/>
   
   <group if="$(arg Twopioneer)">
-  	<node pkg="p3dx_move" type="pioneer_p3dx_2" name="pioneer_p3dx_2" output="log"/>
+  	<node pkg="p3dx_move" type="pioneer_p3dx" name="pioneer_p3dx_2" args="p3dx_2" output="log"/>
   	<include file="$(find p3dx_move)/launch/moving_map2.launch" />      
   </group>
   

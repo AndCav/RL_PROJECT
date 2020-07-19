@@ -20,7 +20,7 @@
   <arg name="rgbd_y" default="0.0"/>  
   <arg name="rgbd_yaw" default="0.0"/>
   <arg name="rgbd_pitch" default="1.57"/>
-  <arg name="rgbd_roll" default="0.0"/>
+  <arg name="rgbd_roll" default="1.57"/>
   
   
   
@@ -29,10 +29,10 @@
   
   <!-- pioneers initial positions-->
   <arg name="p3dx_1_x" default="2.0"/>
-  <arg name="p3dx_1_y" default="-4.0"/>
+  <arg name="p3dx_1_y" default="-3.62"/>
   
   <arg name="p3dx_2_x" default="2.0"/>
-  <arg name="p3dx_2_y" default="-3.0"/>
+  <arg name="p3dx_2_y" default="-2.8"/>
   
   
   <!--  station parameters : notice that this are the exact pose values of the station  in the gazebo simulation, the pioneers will know how to reach it and where to stop-->

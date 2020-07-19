@@ -14,11 +14,11 @@ geometry_msgs::Pose place_pose;
 smart_warehouse_2::box_posGoal _GOAL;
 
 
-double pxo_red =1.95;
-double pyo_red = 1.8;
+double pxo_red ;//=1.95
+double pyo_red ;//= 1.8
 double pzo_ = 0.31;
-double pxo_blue = 1.95;
-double pyo_blue = 2.15;
+double pxo_blue ;//= 1.95
+double pyo_blue ; //= 2.15
 //position of the robot
 float abb_z;
 float abb_y;
@@ -32,6 +32,12 @@ std::vector<geometry_msgs::Pose> waypoints_to_start;
 
 Eigen::Matrix<double,3,3> rotation_matrix3;
 
+//conveyor belts
+
+double blue_conv_belt_x;
+double blue_conv_belt_y;
+double red_conv_belt_x;
+double red_conv_belt_y;
 
 //LOAD COORDINATE COMPONENT
 void load_param( float & p, float def, string name ) {
@@ -57,9 +63,51 @@ PICK_PLACE_TASK::PICK_PLACE_TASK(string name_) :
         
         Eigen::Vector3f ea(abb_yaw, 0 ,0);
     
-    rotation_matrix3 = Eigen::AngleAxisd(ea[0], Eigen::Vector3d::UnitZ()) * 
-                       Eigen::AngleAxisd(ea[1], Eigen::Vector3d::UnitY()) * 
-                       Eigen::AngleAxisd(ea[2], Eigen::Vector3d::UnitX());
+        rotation_matrix3 = Eigen::AngleAxisd(ea[0], Eigen::Vector3d::UnitZ()) * 
+	                   Eigen::AngleAxisd(ea[1], Eigen::Vector3d::UnitY()) * 
+	                   Eigen::AngleAxisd(ea[2], Eigen::Vector3d::UnitX());
+	
+	//saving the conveyor belt position
+	
+        float buff_coordinate_x;
+	float buff_coordinate_y;
+	
+	load_param(buff_coordinate_x, 0.0, "p3dx_1_x" );
+	load_param(buff_coordinate_y, 0.0, "p3dx_1_y" );
+	
+	ROS_INFO("position of first pioneer %.2f %.2f",buff_coordinate_x,buff_coordinate_y);
+	
+	Eigen::Matrix<double,3,1> traslation(abb_x,abb_y,abb_z);
+	
+	Eigen::Matrix<double,3,1> pose_blue_convBelt(buff_coordinate_x,buff_coordinate_y,pzo_);
+	pose_blue_convBelt=rotation_matrix3*pose_blue_convBelt+traslation;
+	
+	
+	
+	load_param(buff_coordinate_x, 0.0, "p3dx_2_x" );
+	load_param(buff_coordinate_y, 0.0, "p3dx_2_y" );
+	
+	
+	ROS_INFO("position of second pioneer %.2f %.2f",buff_coordinate_x,buff_coordinate_y);
+	
+	Eigen::Matrix<double,3,1> pose_red_convBelt(buff_coordinate_x,buff_coordinate_y,pzo_);
+	pose_red_convBelt=rotation_matrix3*pose_red_convBelt+traslation;
+	
+	red_conv_belt_x=pose_red_convBelt[0]+3.16;
+	red_conv_belt_y=pose_red_convBelt[1];
+	blue_conv_belt_x=pose_blue_convBelt[0]+3.16;
+	blue_conv_belt_y=pose_blue_convBelt[1];
+	
+	
+	pxo_red=red_conv_belt_x+0.3;
+	pyo_red=red_conv_belt_y;
+	
+	pxo_blue=blue_conv_belt_x+0.3;
+	pyo_blue=blue_conv_belt_y;
+	
+	
+	
+	ROS_INFO("px and py red ; px and py blue %.2f %.2f ;  %.2f %.2f ",pxo_red,pyo_red,pxo_blue,pyo_blue);
 	
 	start_pose.orientation.x = 0;
         start_pose.orientation.y = 1;
@@ -127,8 +175,8 @@ bool PICK_PLACE_TASK::moveit_abb(double px, double py, double pz){
 	if(_GOAL.color == "red"){  
 	   cout<<"it's red"<<endl;
 	   pxo_red -= 0.3;
-	   if(pxo_red < -0.7) // ** If it's the end of the station, start from the head **
-	      pxo_red = 1.7;
+	   if(pxo_red < red_conv_belt_x-2.4) // ** If it's the end of the station, start from the head **
+	      pxo_red = red_conv_belt_x;
 	place_pose.position.x = pxo_red;
 	place_pose.position.y = pyo_red;
 	//** For parsing of Pioneer_manager **
@@ -137,8 +185,8 @@ bool PICK_PLACE_TASK::moveit_abb(double px, double py, double pz){
 	else if (_GOAL.color == "blue"){
 	cout<<"it's blue"<<endl;
 	pxo_blue -= 0.3;
-	if(pxo_blue < -0.7) 
-	 pxo_blue = 1.7;
+	if(pxo_blue < blue_conv_belt_x-2.4) 
+	 pxo_blue = blue_conv_belt_x;
 	place_pose.position.x = pxo_blue;
 	place_pose.position.y = pyo_blue; 
 	//** For parsing of Pioneer_manager **

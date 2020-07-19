@@ -21,6 +21,8 @@ update introduces new features.
 
 -any position change can be done in the .launch file
 
+-
+
 -The RViz window doesn't open anymore, if the user wants to use it, or at least see it, he only needs to uncomment from row 37 to 39 in  file: /RL_PROJECT/abb_irb6640_gazebo/launch/moveit_planning_execution_gazebo.launch
 
 -to make the "ray beam" appear during the simulation go to pioneer_p3dx_model/p3dx_description/urdf/pioneer3dx.gazebo, row 97 and set "visualize" to true.
@@ -94,8 +96,11 @@ $ roslaunch smartwarehouse_opencv identify_boxes.launch
 ```
 ```
 If the user doesn't need to tune the rgb values, he/she can follow this step.
+
 Every step has to be done in all separate shells:
 
+_OLD PROCEDURE:_
+ 
 1)Launching Gazebo and spawning robots
 $ roslaunch smart_warehouse_2 warehouse2.launch
 
@@ -110,28 +115,40 @@ $ roslaunch p3dx_move moving_map.launch
 
 5)Run Pioneer robot node
 $ rosrun p3dx_move pioneer_p3dx_1
+EDIT: the correct command now would be "$ rosrun p3dx_move pioneer_p3dx p3dx_1" or in general "$rosrun p3dx_move pioneer_p3dx {name_of_robot}" being careful to use the same name  spawning the robot, launching the related move_base,AMCL nodes.
 
 6) Run Pioneer manager node
 $ rosrun p3dx_move p3dx_manager
 
 7)Run ABB pick and place task manager
 $ rosrun smart_warehouse_2 abb_pp_task 
+
+_NEW PROCEDURE:_
+
+1) open gazebo, spawn all the robots and start the AGV nodes
+$roslaunch smart_warehouse_2 all.launch
+
+
+2)start camera and manipulator
+$roslaunch smart_warehouse_2 manipulator.launch
+
+
+as an alternative to this procedure you can launch 3 different files:
+
+1) one to start the gazebo world and spawn all the robots
+$ roslaunch smart_warehouse_2 warehouse2.launch
+
+2) the second one to start all the AGVs nodes
+$ roslaunch smart_warehouse_2 pioneer.launch
+
+2) the last one to start camera and manipulator
+$ roslaunch smart_warehouse_2 manipulator.launch
+
 ```
 
 
 # Note:
 ```
-It's possible to launch a world with 2 Pioneers 3DX, it's not necessary to accomplish the task but it would have been a shame to delete it.
-To make it available go to /smart_warehouse_2/warehouse.launch and uncomment the last part od the code, in  pioneer_p3dx_model/p3dx_move/src/p3dx_manager.cpp set the variable p3dx_2_ready to "true"(row 86), get back to catkin_ws/ and launch the command "$ catkin_make". Then between steps 5) and 6)
-5.1) 
-$ roslaunch p3dx_move moving_map2.launch
-5.2) 
-$ rosrun p3dx_move pioneer_p3dx_2
-to work together ad their best the system needs more testing, check the report for issues.
-
-
-to create a new map, first launch the gazebo world (step 1) then in two separate shells
-$ roslaunch p3dx_move moving_no_map.launch
-$ roslaunch p3dx_move rviz.launch
+It is possible to launch  one or two pioneers just setting to false the variable "Twopioneer".
 
 ```

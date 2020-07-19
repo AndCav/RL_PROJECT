@@ -241,8 +241,8 @@ void Pioneer_manager::managing(){
 						 ROS_INFO(" blue to p3dx_1.");
 						 
 						 sposta1.model_name = blue_names[blue_index];
-						 sposta1.pose.position.x = 2;   
-						 sposta1.pose.position.y =-4;
+						 sposta1.pose.position.x = p3dx_1_idle.position.x;   
+						 sposta1.pose.position.y =p3dx_1_idle.position.y;
 						 sposta1.pose.position.z =0.310;
 						 sposta1.pose.orientation.x = 0;
 						 sposta1.pose.orientation.y =0;
@@ -264,8 +264,8 @@ void Pioneer_manager::managing(){
 				
 						 ROS_INFO(" red to p3dx_2.");
 						 sposta2.model_name = red_names[red_index];
-						 sposta2.pose.position.x = 2;   
-						 sposta2.pose.position.y =-3;
+						 sposta2.pose.position.x = p3dx_2_idle.position.x;   
+						 sposta2.pose.position.y =p3dx_2_idle.position.y;
 						 sposta2.pose.position.z =0.330;
 						 sposta2.pose.orientation.x = 0;
 						 sposta2.pose.orientation.y =0;
