@@ -69,6 +69,9 @@ $ sudo apt-get install ros-melodic-moveit ros-melodic-moveit-plugins ros-melodic
 $ sudo apt-get install ros-melodic-industrial-core
 $ sudo apt-get install ros-melodic-abb
 
+You also need to install Eigen:
+$ sudo apt-get install libeigen3-dev
+
 ---probably already downloaded dependencies but needed--
 gazebo
 gazebo_ros
